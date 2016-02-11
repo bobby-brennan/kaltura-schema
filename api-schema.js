@@ -11,7 +11,7 @@ Schema.initialize = function(callback) {
     result = result.xml;
 
     result.services[0].service.forEach(function(service) {
-      var serviceJS = Schema.services[service.$.name] = {actions: {}};
+      var serviceJS = Schema.services[service.$.name] = {actions: {}, id: service.$.id};
       var actions = service.action;
       actions.forEach(function(action) {
         var actionJS = serviceJS.actions[action.$.name] = {parameters: {}};
