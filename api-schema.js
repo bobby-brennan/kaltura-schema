@@ -25,6 +25,7 @@ Schema.initialize = function(callback) {
     result.classes[0].class.forEach(function(cls) {
       var classJS = Schema.classes[cls.$.name] = {properties: {}};
       var props = cls.property || [];
+      if (cls.$.plugin) classJS.plugin = cls.$.plugin;
       if (cls.$.abstract) {
         classJS.abstract = true;
         classJS.subclasses = result.classes[0].class
@@ -42,12 +43,13 @@ Schema.initialize = function(callback) {
       props.forEach(function(prop) {
         var propJS = classJS.properties[prop.$.name] = {};
         propJS.type = prop.$.type;
-        if (prop.$.enupType) propJS.enumType = prop.$.enumType;
+        if (prop.$.enumType) propJS.enumType = prop.$.enumType;
       });
     });
 
     result.enums[0].enum.forEach(function(en) {
       var enumJS = Schema.enums[en.$.name] = {values: {}};
+      if (en.$.plugin) enumJS.plugin = en.$.plugin;
       vals = en.const || []
       vals.forEach(function(val) {
         enumJS.values[val.$.name] = val.$.value;
