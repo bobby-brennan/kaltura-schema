@@ -4,12 +4,10 @@ var XMLParser = require('xml2js').parseString;
 
 var SchemaXML = FS.readFileSync(Path.join(__dirname, 'api_schema.xml'), 'utf8');
 var Schema = module.exports = {classes: {}, services: {}, enums: {}};
-
 Schema.initialize = function(callback) {
   XMLParser(SchemaXML, function(err, result) {
     if (err) throw err;
     result = result.xml;
-
     result.services[0].service.forEach(function(service) {
       var serviceJS = Schema.services[service.$.name] = {actions: {}, id: service.$.id};
       var actions = service.action;
@@ -27,6 +25,12 @@ Schema.initialize = function(callback) {
     result.classes[0].class.forEach(function(cls) {
       var classJS = Schema.classes[cls.$.name] = {properties: {}};
       var props = cls.property || [];
+      if (cls.$.abstract) {
+        classJS.abstract = true;
+        classJS.subclasses = result.classes[0].class
+            .filter(function(subclass) {return subclass.$.base === cls.$.name})
+            .map(function(subclass) {return subclass.$.name})
+      }
       if (cls.$.base) {
         var copyBaseProps = function(baseName) {
           var baseClass = result.classes[0].class.filter(function(baseClass) {return baseName === baseClass.$.name })[0];
@@ -38,7 +42,7 @@ Schema.initialize = function(callback) {
       props.forEach(function(prop) {
         var propJS = classJS.properties[prop.$.name] = {};
         propJS.type = prop.$.type;
-        propJS.enumType = prop.$.enumType;
+        if (prop.$.enupType) propJS.enumType = prop.$.enumType;
       });
     });
 
