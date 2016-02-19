@@ -28,10 +28,11 @@ Schema.initialize = function(callback) {
       if (cls.$.plugin) classJS.plugin = cls.$.plugin;
       if (cls.$.abstract) {
         classJS.abstract = true;
-        classJS.subclasses = result.classes[0].class
-            .filter(function(subclass) {return subclass.$.base === cls.$.name})
-            .map(function(subclass) {return subclass.$.name})
       }
+      var subclasses = result.classes[0].class
+          .filter(function(subclass) {return subclass.$.base === cls.$.name})
+          .map(function(subclass) {return subclass.$.name})
+      if (subclasses.length) classJS.subclasses = subclasses;
       if (cls.$.base) {
         var copyBaseProps = function(baseName) {
           var baseClass = result.classes[0].class.filter(function(baseClass) {return baseName === baseClass.$.name })[0];
