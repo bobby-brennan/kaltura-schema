@@ -3,10 +3,11 @@ var Path = require('path');
 var XMLParser = require('xml2js').parseString;
 var request = require('request');
 
-var Schema = module.exports = {classes: {}, services: {}, enums: {}};
+var Schema = module.exports = {classes: {}, services: {}, enums: {}, xml: ""};
 var SCHEMA_URL = "http://www.kaltura.com/api_v3/api_schema.php";
 Schema.initialize = function(callback) {
   request.get(SCHEMA_URL, function(err, resp, schemaXML) {
+    Schema.xml = schemaXML;
     XMLParser(schemaXML, function(err, result) {
       if (err) throw err;
       result = result.xml;
