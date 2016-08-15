@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bobby-brennan/kaltura-schema#readme",
   "dependencies": {
+    "request": "^2.74.0",
     "xml2js": "^0.4.16"
   },
   "devDependencies": {}
